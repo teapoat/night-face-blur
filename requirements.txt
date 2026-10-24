@@ -1,0 +1,4 @@
+numpy==2.5.4
+opencv-python-headless==5.0.0.93
+onnxruntime-gpu==1.31.0
+nvidia-cudnn-cu13==9.27.0.42

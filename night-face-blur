@@ -1,0 +1,29 @@
+#!/bin/bash
+# Export the venv cuDNN directory before Python starts. Setting it inside
+# the interpreter is too late for dlopen. CPU still runs when cuDNN is absent.
+set -euo pipefail
+
+root=$(dirname "$(readlink -f "$0")")
+py="$root/.venv/bin/python"
+if [[ ! -x "$py" ]]; then
+    echo "Missing $py" >&2
+    echo "python3 -m venv $root/.venv" >&2
+    echo "$root/.venv/bin/pip install -r $root/requirements.txt" >&2
+    exit 1
+fi
+
+lib=""
+for dir in "$root"/.venv/lib/python*/site-packages/nvidia/cudnn/lib; do
+    if [[ -d "$dir" ]]; then
+        lib=$dir
+        break
+    fi
+done
+if [[ -n "$lib" ]]; then
+    if [[ -f "$lib/libcudnn.so.9" && ! -e "$lib/libcudnn.so" ]]; then
+        ln -s libcudnn.so.9 "$lib/libcudnn.so"
+    fi
+    export LD_LIBRARY_PATH="$lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+fi
+
+exec "$py" "$root/main.py" "$@"
