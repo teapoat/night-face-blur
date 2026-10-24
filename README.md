@@ -1,24 +1,31 @@
 # night-face-blur
 
-Blur faces in a night video. The face spot has three sizes. The detector does not change.
+Blur faces in a night video.
 
-Medium is the blur tuned on night phone video. Soft is a smaller spot. Hard is a wider spot. Faces turned down, the back of a head, and license plates stay visible.
+3 blur sizes. The detector stays the same.
+Soft: smaller spot. Medium: the night setting. Hard: wider spot.
+Misses a face turned down, the back of a head, and license plates.
 
 ![Blurred face on a night street](card.jpg)
 
 ## Run
 
-Open a terminal in the folder that holds the videos.
+From the video folder. That folder only.
 
 ```
 /path/to/night-face-blur
 ```
 
-The list is only that folder, not folders inside it. Pick a file with the arrow keys and Enter. The first time, pick soft, medium, or hard. The tool checks one frame every 3 seconds and writes `<name>_preview/` with up to four stills that contain a face, then opens the folder. Enter runs the whole video. `n` picks another level. `q` quits.
+Text menu. Arrows, number keys, Enter.
+Pick a file, then soft, medium, or hard.
+One frame every 3 seconds. Up to 4 stills with a face, in `<name>_preview/`. The folder opens.
+Enter runs the whole file. `n` picks another size. `q` quits.
 
-The finished file is `<name>-blur` next to the original. The original is not replaced. A later video in the same folder starts from the saved level, and still shows its own stills. The saved level is `conf/current`. A new file is written only when the level changes (`medium.txt`, then `soft.txt`, `soft-2.txt`).
+Output: `<name>-blur`, next to the original. The original stays.
+The next video starts from the saved size and still gets its own stills.
+Saved size: `conf/current`. A new file only when the size changes (`medium.txt`, `soft.txt`, `soft-2.txt`).
 
-To skip the menu:
+No menu:
 
 ```
 /path/to/night-face-blur --level medium video.mp4
@@ -26,7 +33,7 @@ To skip the menu:
 
 ## Install
 
-Needs ffmpeg and Python 3.14. This was run on Python 3.14. Other versions were not tried.
+ffmpeg. Python 3.14. Other versions were not tried.
 
 ```
 python3 -m venv .venv
@@ -36,8 +43,16 @@ python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 ```
 
-A video card is optional. Tested on an RTX 3060 Ti with driver 580. If CUDA does not start, the tool says so and runs the detector on the CPU. The blur and the video encode always use the CPU. On two short night clips the CPU was about three times slower than the GPU. A machine with no NVIDIA card was not tried.
+NVIDIA is optional. Tested: RTX 3060 Ti, driver 580.
+No CUDA: one line, then detection on CPU. Blur and encode stay on CPU.
+Two short clips: CPU was about 3 times slower. A machine with no NVIDIA card was not tried.
 
-The first run downloads `yolov8n-face.onnx` (12 MB) from this project's GitHub release when the file is not already next to the script. The download is checked against a fixed hash.
+First run downloads `yolov8n-face.onnx` (12 MB) from this repo's release, if the file is not next to the script. The hash is checked.
 
-The weight file comes from [yakhyo/yolov8-face-onnx-inference](https://github.com/yakhyo/yolov8-face-onnx-inference). That repo has no license file. The training project it names, [derronqi/yolov8-face](https://github.com/derronqi/yolov8-face), is GPL-3.0. This script is MIT. The weight is separate and is not in the git tree.
+Weight source. No license file:
+https://github.com/yakhyo/yolov8-face-onnx-inference
+
+Training project. GPL-3.0:
+https://github.com/derronqi/yolov8-face
+
+This script is MIT. The weight is not in git.
