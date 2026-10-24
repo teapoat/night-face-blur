@@ -1,6 +1,7 @@
 # night-face-blur
 
 Blur faces in a night video.
+Day video caught faces in a small test. Night video was tested more.
 
 3 blur sizes. The detector stays the same.
 Soft: smaller spot. Medium: the night setting. Hard: wider spot.
@@ -46,6 +47,11 @@ python3 -m venv .venv
 NVIDIA is optional. Tested: RTX 3060 Ti, driver 580.
 No CUDA: one line, then detection on CPU. Blur and encode stay on CPU.
 Two short clips: CPU was about 3 times slower. A machine with no NVIDIA card was not tried.
+
+The Python install is about 2.2 GB.
+Most of that is NVIDIA libraries downloaded with the GPU packages.
+A machine with no NVIDIA card still downloads them.
+A smaller install, without those libraries, was not tried.
 
 First run downloads `yolov8n-face.onnx` (12 MB) from this repo's release, if the file is not next to the script. The hash is checked.
 
